@@ -624,6 +624,7 @@ impl AshellTheme {
     pub fn workspace_button_style(
         &self,
         is_empty: bool,
+        is_active: bool,
         colors: Option<Option<AppearanceColor>>,
     ) -> impl Fn(&Theme, Status) -> button::Style + use<> {
         let radius_lg = self.radius.lg;
@@ -655,17 +656,23 @@ impl AshellTheme {
                 },
             );
             let mut base = button::Style {
-                background: Some(Background::Color(if is_empty {
+                background: Some(Background::Color(if is_empty && !is_active {
                     theme.extended_palette().background.weak.color
                 } else {
                     bg_color
                 })),
                 border: Border {
-                    width: if is_empty { 1.0 } else { 0.0 },
-                    color: bg_color,
+                    width: if is_active {
+                        2.0
+                    } else if is_empty {
+                        1.0
+                    } else {
+                        0.0
+                    },
+                    color: if is_active { fg_color } else { bg_color },
                     radius: radius_lg.into(),
                 },
-                text_color: if is_empty {
+                text_color: if is_empty && !is_active {
                     theme.extended_palette().background.weak.text
                 } else {
                     fg_color
@@ -702,12 +709,12 @@ impl AshellTheme {
                         },
                     );
 
-                    base.background = Some(Background::Color(if is_empty {
+                    base.background = Some(Background::Color(if is_empty && !is_active {
                         theme.extended_palette().background.strong.color
                     } else {
                         bg_color
                     }));
-                    base.text_color = if is_empty {
+                    base.text_color = if is_empty && !is_active {
                         theme.extended_palette().background.weak.text
                     } else {
                         fg_color
