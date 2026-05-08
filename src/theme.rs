@@ -656,20 +656,21 @@ impl AshellTheme {
                 },
             );
             let mut base = button::Style {
-                background: Some(Background::Color(if is_empty && !is_active {
-                    theme.extended_palette().background.weak.color
-                } else {
+                background: Some(Background::Color(if is_active {
                     bg_color
+                } else if is_empty {
+                    theme
+                        .extended_palette()
+                        .background
+                        .weak
+                        .color
+                        .scale_alpha(0.35)
+                } else {
+                    bg_color.scale_alpha(0.45)
                 })),
                 border: Border {
-                    width: if is_active {
-                        2.0
-                    } else if is_empty {
-                        1.0
-                    } else {
-                        0.0
-                    },
-                    color: if is_active { fg_color } else { bg_color },
+                    width: if is_empty && !is_active { 1.0 } else { 0.0 },
+                    color: bg_color.scale_alpha(0.45),
                     radius: radius_lg.into(),
                 },
                 text_color: if is_empty && !is_active {
@@ -709,10 +710,17 @@ impl AshellTheme {
                         },
                     );
 
-                    base.background = Some(Background::Color(if is_empty && !is_active {
-                        theme.extended_palette().background.strong.color
-                    } else {
+                    base.background = Some(Background::Color(if is_active {
                         bg_color
+                    } else if is_empty {
+                        theme
+                            .extended_palette()
+                            .background
+                            .strong
+                            .color
+                            .scale_alpha(0.45)
+                    } else {
+                        bg_color.scale_alpha(0.65)
                     }));
                     base.text_color = if is_empty && !is_active {
                         theme.extended_palette().background.weak.text
