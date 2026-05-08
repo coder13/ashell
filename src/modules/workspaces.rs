@@ -415,6 +415,8 @@ impl Workspaces {
                                 .unwrap_or_else(|| &w.monitor)
                                 .contains(&w.monitor),
                         };
+                        let show =
+                            show && (w.id < 0 || w.windows > 0 || w.displayed != Displayed::Hidden);
 
                         if show {
                             let empty = w.windows == 0;
